@@ -172,7 +172,7 @@ public static class DataHelper
     
     public static IList<T> SelectScalar<T>(this IDbConnection cnx, string command, string columnName, bool closeConnection = false)
     {
-        return Select(cnx, command, closeConnection).Rows.Cast<DataRow>().ToList()
+        return Select(cnx, command, closeConnection).Rows.Cast<DataRow>()
             .Select(v=>v[columnName])
             .Cast<T>().ToList();
     }
@@ -261,17 +261,7 @@ public static class DataHelper
         
         return ret;
     }
-
-    public static IDictionary<string, object> ToDictionary(this DataRow dataRow)
-    {
-        Dictionary<string, object> ret = new Dictionary<string, object>();
-
-        foreach (DataColumn column in dataRow.Table.Columns.Cast<DataColumn>())
-            ret.Add(column.ColumnName, dataRow[column.Ordinal]);
-        
-        return ret;
-    }
-
+    
     public static IList<IDictionary<string, object>> ToList(this IDataReader dataRow)
     {
         IList<IDictionary<string, object>> lRet = new List<IDictionary<string, object>>();
@@ -285,6 +275,16 @@ public static class DataHelper
         }
 
         return lRet;
+    }
+    
+    public static IDictionary<string, object> ToDictionary(this DataRow dataRow)
+    {
+        Dictionary<string, object> ret = new Dictionary<string, object>();
+
+        foreach (DataColumn column in dataRow.Table.Columns.Cast<DataColumn>())
+            ret.Add(column.ColumnName, dataRow[column.Ordinal]);
+        
+        return ret;
     }
     
     public static IDictionary<string, object> ToDictionary(this IDataReader dataRow)
@@ -324,5 +324,9 @@ public static class DataHelper
     public static T Get<T>(this IDataReader value, string columnName)
     {
         return (T)value[columnName];
+    }
+    public static T Get<T>(this DataRow dr, string columnName)
+    {
+        return (T)dr[columnName];
     }
 }
