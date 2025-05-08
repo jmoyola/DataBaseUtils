@@ -325,4 +325,9 @@ public static class DataHelper
     {
         return (T)value[columnName];
     }
+    
+    public static T Get<T>(this DataRow value, string columnName)
+    {
+        return (T)value[columnName];
+    }
 }
